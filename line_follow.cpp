@@ -4,14 +4,17 @@
 #include <string>
 
 
+
+
 int main() {
-    
+
+
     if (!uart::open()) { std::cerr << "open failed\n"; return 1; }
 
     Pixy2 pixy;
 
-    int r = pixy.init();
-    if (r < 0) { std::cerr << "pixy init failed: " << r << "\n";
+    int rc = pixy.init();
+    if (rc < 0) { std::cerr << "pixy init failed: " << rc << "\n";
         uart::close(); return 2; }
 
     // Print firmware version
@@ -29,12 +32,39 @@ int main() {
         std::cout << "UART active. Response: " << resp << "\n";
     }
 
-    
-    
-    while(1){
-        int8_t feat = pixy.line.getMainFeatures(false);
-        std::cout << "feat: " << (int)feat << "\n";
+    // Switch to line tracking mode
+    pixy.changeProg("line");
+    std::cout << "Switched to line tracking mode.\n";
+
+    //Turn on the lamps
+    rc = pixy.setLamp(0, 0);
+    if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
+
+    // Set LED to green
+    rc = pixy.setLED(0, 0, 0); // green
+    if (rc < 0) std::cerr << "setLED failed: " << rc << "\n";
+
+
+
+    while (1) {
+        int8_t feat = pixy.line.getMainFeatures();
+        
+        if (feat == 1) {
+            std::cout << "Line detected!\n";
+        }
+        else if (feat == 2) {
+            std::cout << "Intersection detected!\n";
+        }
+        else if (feat == PIXY_RESULT_BUSY) {
+            // no new frame yet, just continue
+            continue;
+        }
+        else if (feat < 0) {
+            // handle other errors if you care
+            std::cerr << "Error: " << (int)feat << "\n";
+        }
     }
+
 
     
 
