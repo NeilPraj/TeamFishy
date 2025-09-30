@@ -33,16 +33,19 @@ int main() {
     }
 
     // Switch to line tracking mode
-    pixy.changeProg("line");
-    std::cout << "Switched to line tracking mode.\n";
+    rc = pixy.changeProg("line");
+    if (rc < 0) { std::cerr << "changeProg failed: " << rc << "\n";}
+    else { std::cout << "Line tracking mode active\n"; }
 
     //Turn on the lamps
     rc = pixy.setLamp(0, 0);
     if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
+    else std::cout << "Lamps on\n";
 
     // Set LED to green
     rc = pixy.setLED(0, 0, 0); // green
     if (rc < 0) std::cerr << "setLED failed: " << rc << "\n";
+    else std::cout << "LED green\n";
 
 
 
@@ -51,6 +54,7 @@ int main() {
         
         if (feat == 1) {
             std::cout << "Line detected!\n";
+            
         }
         else if (feat == 2) {
             std::cout << "Intersection detected!\n";
