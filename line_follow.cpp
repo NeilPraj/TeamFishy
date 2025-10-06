@@ -1,18 +1,31 @@
 #include "uart.hpp"
 #include "libpixyusb2.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <cstring>
+#include <csignal>
 
 #define X_CENTER (pixy.frameWidth/2) // center of the Pixy2 camera's view (316 pixels wide)
 
+
+static bool run_flag = true;
+
 void get_line_features(Pixy2 &pixy);
 int get_heading_error(Pixy2 &pixy);
+void handle_SIGINT(int unused);
 
 
+
+// pack int16_t LE explicitly to avoid endianness surprises
+static inline void pack_le16(int16_t v, uint8_t out[2]) {
+    out[0] = static_cast<uint8_t>(v & 0xFF);
+    out[1] = static_cast<uint8_t>((v >> 8) & 0xFF);
+}
 
 int main() {
-
+    std::signal(SIGINT, handle_SIGINT);
+    std::cout << "Line follow demo\n";
 
     if (!uart::open()) { std::cerr << "open failed\n"; return 1; }
 
@@ -43,7 +56,7 @@ int main() {
     else { std::cout << "Line tracking mode active\n"; }
 
     //Turn on the lamps
-    rc = pixy.setLamp(0, 0);
+    rc = pixy.setLamp(1, 1);
     if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
     else std::cout << "Lamps on\n";
 
@@ -54,35 +67,43 @@ int main() {
 
 
 
-while (true) {
-    int32_t h_error = get_heading_error(pixy);
+    while (run_flag) {
+        int16_t h_error = get_heading_error(pixy);  // your function
 
-    // --- Send 4 raw bytes (binary int) ---
-    uart::send(std::string_view(
-        reinterpret_cast<const char*>(&h_error),
-        sizeof(h_error)
-    ));
+        // send 2 bytes (LE)
+        uint8_t tx[2];
+        pack_le16(h_error, tx);
+        uart::send(std::string_view(reinterpret_cast<const char*>(tx), 2));
 
-    // --- Read back echo (up to 4 bytes) ---
-    std::string echoed = uart::recv(sizeof(h_error), 10);
-
-    // --- Reconstruct integer from echoed bytes ---
-    int32_t echoed_value = 0;
-    if (echoed.size() == sizeof(echoed_value)) {
-        std::memcpy(&echoed_value, echoed.data(), sizeof(echoed_value));
-    } else {
-        echoed_value = INT32_MIN;  // optional: signal incomplete read
+        // read exactly 1 byte direction from MCU ('L','R','F','G', etc.)
+        std::string dir = uart::recv(1, 100);
+        if (dir.size() == 1) {
+            std::cout << "Sent h_error: " << h_error
+                        << "  MCU sent: " << dir[0] << "\n";
+        } else {
+            std::cout << "Nothing Received (timeout)\n";
+        }
     }
 
-    // --- Print results ---
-    std::cout << echoed.size() << " bytes echoed. "
-              << "Sent: " << h_error
-              << ", Received: " << echoed_value
-              << std::endl;
-}
 
 
-    
+    std::cout << "Interrupt Detected!\n";
+
+    int16_t end_sig = -999;
+    uart::send(std::string_view(reinterpret_cast<const char*>(&end_sig), 2));
+    std::string dir = uart::recv(1, 100);
+
+    if (dir.size() == 1) {
+        std::cout << "Sent h_error: " << end_sig
+                    << "  MCU sent: " << dir[0] << "\n";
+    } else {
+        std::cout << "Nothing Received (timeout)\n";
+    }
+
+    // Turn off the lamps
+    rc = pixy.setLamp(0, 0);
+    if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
+    else std::cout << "Lamps off\n";
 
     uart::close();
     return 0;
@@ -154,4 +175,8 @@ void  get_line_features(Pixy2 &pixy)
       pixy.line.barcodes[Element_Index].print();
     }
   }
+}
+
+void handle_SIGINT(int unused) {
+    run_flag = false;
 }
