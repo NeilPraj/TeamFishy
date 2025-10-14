@@ -75,14 +75,17 @@ int main() {
         pack_le16(h_error, tx);
         uart::send(std::string_view(reinterpret_cast<const char*>(tx), 2));
 
-        // read exactly 1 byte direction from MCU ('L','R','F','G', etc.)
-        std::string dir = uart::recv(1, 100);
-        if (dir.size() == 1) {
+
+        std::string dir = uart::recv(2, 100);
+        if (dir.size() == 2) {
             std::cout << "Sent h_error: " << h_error
-                        << "  MCU sent: " << dir[0] << "\n";
+                      << "  Left Motor: " << static_cast<unsigned>(static_cast<uint8_t>(dir[0]))
+                      << "  Right Motor: " << static_cast<unsigned>(static_cast<uint8_t>(dir[1]))
+                      << "\n";
         } else {
             std::cout << "Nothing Received (timeout)\n";
         }
+
     }
 
 
