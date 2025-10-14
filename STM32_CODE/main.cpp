@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "Motors.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -52,6 +52,8 @@ DMA_HandleTypeDef hdma_usart1_rx;
 static uint8_t rxbuf[RXBUF_SIZE];
 volatile int16_t latest_heading;
 volatile uint8_t heading_ready = 0;
+
+volatile uint32_t counter = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,9 +62,12 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
+
+
 /* USER CODE BEGIN PFP */
 void uart_rx_start(void);
 void HAL_UARTex_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size);
+uint32_t millis();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -124,12 +129,25 @@ int main(void)
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+
+  SysTick_Config(SystemCoreClock / 1000); // 1ms tick
+
+  Motors::Channels motor_ch = {
+      .left_in1 = TIM_CHANNEL_1,
+      .left_in2 = TIM_CHANNEL_2,
+      .right_in1 = TIM_CHANNEL_3,
+      .right_in2 = TIM_CHANNEL_4
+  };
+
+
+  Motors motors(&htim2, motor_ch);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   uart_rx_start();
   uint8_t resp;
-  const uint16_t MIN_PWM = 150; // about 50% duty cycle
+  int16_t previous_error = 0;
+  uint8_t max_speed = 200;
   /* USER CODE BEGIN WHILE */
 while (1)
 {
@@ -142,39 +160,35 @@ while (1)
         // --- STOP condition ---
         if (h == STOP_DA_FISHY) {
             resp = 'S';
+            motors.resetIntegral();
             motors_stop();
             HAL_UART_Transmit(&huart1, &resp, 1, HAL_MAX_DELAY);
             continue;
         }
 
-        // --- Dumb ON/OFF control ---
-        // Negative heading = turn left
-        // Positive heading = turn right
-        // Near zero = go forward
+        //TODO implement PID control here
+        // --- PID control ---
+        int16_t correction = motors.pidController(0.7f, 0.2f, 0.5f, h, previous_error, 0.1f);
+        previous_error = h;
+        uint8_t base_speed = 150;
 
-        if (h < -1) { // turn left
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);        // left motor off
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, MIN_PWM);  // right motor on
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-            resp = 'L';
-        }
-        else if (h > 1) { // turn right
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, MIN_PWM);  // left motor on
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);        // right motor off
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-            resp = 'R';
-        }
-        else { // straight
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, MIN_PWM);
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, MIN_PWM);
-            __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-            resp = 'F';
-        }
+        uint8_t left_speed = base_speed + correction;
+        uint8_t right_speed = base_speed - correction;
 
-        HAL_UART_Transmit(&huart1, &resp, 1, HAL_MAX_DELAY);
+        if (left_speed > max_speed) left_speed = max_speed;
+        if (right_speed > max_speed) right_speed = max_speed;
+        if (left_speed < 0) left_speed = 0;
+        if (right_speed < 0) right_speed = 0;
+
+        motors.setLeft(left_speed);
+        motors.setRight(right_speed);
+
+        uint8_t resp_buf[2];
+        resp_buf[0] = left_speed;
+        resp_buf[1] = right_speed;
+        
+        HAL_UART_Transmit(&huart1, resp_buf, 2, HAL_MAX_DELAY);
+
     }
 }
   /* USER CODE END 3 */
@@ -394,6 +408,17 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size){
   // Re-arm immediately (HAL restarts for you in recent HAL; if not, call uart_rx_start() again)
   // Safe option:
   uart_rx_start();
+}
+
+
+void SysTick_Handler(void)
+{
+  //HAL_IncTick();
+  counter++;
+}
+
+uint32_t millis() {
+    return counter;
 }
 /* USER CODE END 4 */
 
