@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "Motors.h"
+#include <cstring>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -45,6 +46,10 @@ TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
+
+float ki = 0.0f;
+float kd = 0.0f;
+float kp = 0.0f;
 
 
 
@@ -144,10 +149,46 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Infinite loop */
-  uart_rx_start();
   uint8_t resp;
+  uint8_t res_float[4];
+  uint8_t err_msg[4] = {'N','N','N','N'};
+
+  bool kp_set, ki_set, kd_set;
+
+  for(int i = 0; i < 3 ; ++i){
+    if(HAL_UART_Receive(&huart1, res_float, sizeof(res_float), HAL_MAX_DELAY) == HAL_OK){
+      if(i == 0){
+        memcpy(&kp, res_float, sizeof(float));
+        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&kp), sizeof(kp), HAL_MAX_DELAY);
+        kp_set =true;
+      } else if (i == 1){
+        memcpy(&ki, res_float, sizeof(float));
+        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&ki), sizeof(ki), HAL_MAX_DELAY);
+        ki_set =true;
+      } else if (i == 2){
+        memcpy(&kd, res_float, sizeof(float));
+        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&kd), sizeof(kd), HAL_MAX_DELAY);
+        kd_set =true;
+      }
+    }
+
+  }
+  
+
+  /*
+  uint8_t buf[4];
+  while(!constants_set)
+  if (HAL_UART_Receive(&huart1, buf, sizeof(buf), HAL_MAX_DELAY) == HAL_OK) {
+      HAL_UART_Transmit(&huart1, buf, sizeof(buf), HAL_MAX_DELAY);
+      constants_set = true;
+  }
+  */
+
+
+
+  uart_rx_start();
   int16_t previous_error = 0;
-  uint8_t max_speed = 200;
+  uint8_t max_speed = 175;
   /* USER CODE BEGIN WHILE */
 while (1)
 {
@@ -168,9 +209,9 @@ while (1)
 
         //TODO implement PID control here
         // --- PID control ---
-        int16_t correction = motors.pidController(0.7f, 0.2f, 0.5f, h, previous_error, 0.1f);
+        int16_t correction = motors.pidController(8.0f, 1.0f, 0.2f, h, previous_error, 0.1f);
         previous_error = h;
-        uint8_t base_speed = 150;
+        uint8_t base_speed = 125;
 
         uint8_t left_speed = base_speed + correction;
         uint8_t right_speed = base_speed - correction;

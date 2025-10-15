@@ -14,8 +14,11 @@ static bool run_flag = true;
 void get_line_features(Pixy2 &pixy);
 int get_heading_error(Pixy2 &pixy);
 void handle_SIGINT(int unused);
+void recv_float_with_timeout(uint8_t rxsize, uint32_t timeout_ms, float sent_val);
 
-
+float kp = 8.0f;
+float ki = 0.5f;
+float kd = 0.2f;
 
 // pack int16_t LE explicitly to avoid endianness surprises
 static inline void pack_le16(int16_t v, uint8_t out[2]) {
@@ -41,7 +44,7 @@ int main() {
               << (int)pixy.version->firmwareMinor << "."
               << (int)pixy.version->firmwareBuild << "\n";
     
-
+    /*
     uart::send("Test");
     std::string resp = uart::recv(256, 1000); // up to 256 bytes, 1s timeout
     if(resp.empty()) {
@@ -49,6 +52,17 @@ int main() {
     } else {
         std::cout << "UART active. Response: " << resp << "\n";
     }
+    */
+
+  
+    
+    uart::send(std::string_view(reinterpret_cast<const char*>(&kp), sizeof(kp)));
+    recv_float_with_timeout(4, 1000, kp);
+    uart::send(std::string_view(reinterpret_cast<const char*>(&ki), sizeof(ki)));
+    recv_float_with_timeout(4, 1000, ki);
+    uart::send(std::string_view(reinterpret_cast<const char*>(&kd), sizeof(kd)));
+    recv_float_with_timeout(4, 1000, kd);
+
 
     // Switch to line tracking mode
     rc = pixy.changeProg("line");
@@ -182,4 +196,17 @@ void  get_line_features(Pixy2 &pixy)
 
 void handle_SIGINT(int unused) {
     run_flag = false;
+}
+
+void recv_float_with_timeout(uint8_t rxsize, uint32_t timeout_ms, float sent_val){
+  
+    std::string resp = uart::recv(rxsize, timeout_ms);
+    if (resp.size() == rxsize) {
+        float echo = 0.0f;
+        std::memcpy(&echo, resp.data(), rxsize);
+        std::cout << "Sent: " << sent_val << "  MCU echoed: " << echo << "\n";
+    } else {
+        std::cout << "Nothing Received (timeout)\n";
+    }
+
 }
