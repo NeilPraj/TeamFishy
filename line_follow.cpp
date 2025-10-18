@@ -1,5 +1,6 @@
 #include "uart.hpp"
 #include "libpixyusb2.h"
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -28,9 +29,11 @@ static inline void pack_le16(int16_t v, uint8_t out[2]) {
 
 int main() {
     std::signal(SIGINT, handle_SIGINT);
-    std::cout << "Line follow demo\n";
 
-    if (!uart::open()) { std::cerr << "open failed\n"; return 1; }
+    if (!uart::open("/dev/ttyS3", 115200)) { std::cerr << "open failed\n"; return 1; }
+    else{
+        std::cout << "UART opened\n";
+    }
 
     Pixy2 pixy;
 
@@ -82,7 +85,7 @@ int main() {
 
 
     while (run_flag) {
-        int16_t h_error = get_heading_error(pixy);  // your function
+        int16_t h_error = get_heading_error(pixy);  
 
         // send 2 bytes (LE)
         uint8_t tx[2];
@@ -132,16 +135,20 @@ int get_heading_error(Pixy2 &pixy){
  // center of the Pixy2 camera's view (316 pixels wide)    
 
     pixy.line.getMainFeatures();
+    
     if(pixy.line.numVectors){
+        //printf("%u\n", pixy.line.numVectors);
         //pixy.line.vectors[0].print();
-        error = (int32_t)pixy.line.vectors->m_x1 - (int32_t)X_CENTER;
-        //std::cout << "Heading error: " << error << "\n";
+        int32_t opp = (int32_t)pixy.line.vectors->m_x1 - (int32_t)X_CENTER;   // Horizontal offset
+        int32_t adj = (int32_t)pixy.line.vectors->m_y1;     // Uppermost y component
+        float theta = atan((float)opp / (float)adj) * (180 / M_PI); // Offset angle
+        error = (int32_t)theta;
+        std::cout << "Heading error: " << error << " degrees\n";
         return error;
     } else {
         std::cout << "No vectors detected\n";
         return -999; 
     }
-
 }
 
 void  get_line_features(Pixy2 &pixy)
