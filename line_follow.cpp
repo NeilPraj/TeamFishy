@@ -87,22 +87,15 @@ int main() {
                     std::cout << "[CMD] get kp\n";
                     float val = kp;
                     uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
-                } else if(line == "S kp"){
-                    std::cout << "[RESP] SET KP\n";
-                } else if(line == "G ki"){
+                }  else if(line == "G ki"){
                     std::cout << "[CMD] get ki\n";
                     float val = ki;
                     uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
-                } else if(line == "S ki"){
-                    std::cout << "[RESP] SET KI\n";
-                } else if(line == "G kd"){
+                }  else if(line == "G kd"){
                     std::cout << "[CMD] get kd\n";
                     float val = kd;
                     uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
-                } else if(line == "S kd"){
-                    std::cout << "[RESP] SET KD\n";
-                } 
-                else if(line == "G H"){
+                }  else if(line == "G H"){
                     std::cout << "[RESP] Get heading error\n";
                     int val = get_heading_error(pixy);
                     std::cout << "Heading error: " << val << "\n";
