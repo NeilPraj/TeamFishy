@@ -1,5 +1,6 @@
 #include "uart.hpp"
 #include "libpixyusb2.h"
+#include "camera.hpp"
 #include <cmath>
 #include <iostream>
 #include <iomanip>
@@ -7,25 +8,29 @@
 #include <cstring>
 #include <csignal>
 
+
 #define X_CENTER (pixy.frameWidth/2) // center of the Pixy2 camera's view (316 pixels wide)
 
 
 static bool run_flag = true;
 
-void get_line_features(Pixy2 &pixy);
-int get_heading_error(Pixy2 &pixy);
+
 void handle_SIGINT(int unused);
 void recv_float_with_timeout(uint8_t rxsize, uint32_t timeout_ms, float sent_val);
 
-float kp = 8.0f;
-float ki = 0.5f;
+float kp = 2.0f;
+float ki = 0.3f;
 float kd = 0.2f;
 
-// pack int16_t LE explicitly to avoid endianness surprises
-static inline void pack_le16(int16_t v, uint8_t out[2]) {
-    out[0] = static_cast<uint8_t>(v & 0xFF);
-    out[1] = static_cast<uint8_t>((v >> 8) & 0xFF);
+// removes leading/trailing spaces, tabs, and newlines
+static std::string trim(const std::string& s) {
+    const auto start = s.find_first_not_of(" \t\r\n");
+    if (start == std::string::npos)
+        return {};
+    const auto end = s.find_last_not_of(" \t\r\n");
+    return s.substr(start, end - start + 1);
 }
+
 
 int main() {
     std::signal(SIGINT, handle_SIGINT);
@@ -36,74 +41,83 @@ int main() {
     }
 
     Pixy2 pixy;
+    setup_camera(pixy);
 
-    int rc = pixy.init();
-    if (rc < 0) { std::cerr << "pixy init failed: " << rc << "\n";
-        uart::close(); return 2; }
 
-    // Print firmware version
-    std::cout << "FW: "
-              << (int)pixy.version->firmwareMajor << "."
-              << (int)pixy.version->firmwareMinor << "."
-              << (int)pixy.version->firmwareBuild << "\n";
     
-    /*
-    uart::send("Test");
-    std::string resp = uart::recv(256, 1000); // up to 256 bytes, 1s timeout
-    if(resp.empty()) {
-        std::cout << "no response\n";
-    } else {
-        std::cout << "UART active. Response: " << resp << "\n";
-    }
-    */
 
   
-    
+    /*
     uart::send(std::string_view(reinterpret_cast<const char*>(&kp), sizeof(kp)));
     recv_float_with_timeout(4, 1000, kp);
     uart::send(std::string_view(reinterpret_cast<const char*>(&ki), sizeof(ki)));
     recv_float_with_timeout(4, 1000, ki);
     uart::send(std::string_view(reinterpret_cast<const char*>(&kd), sizeof(kd)));
     recv_float_with_timeout(4, 1000, kd);
+    */
 
 
-    // Switch to line tracking mode
-    rc = pixy.changeProg("line");
-    if (rc < 0) { std::cerr << "changeProg failed: " << rc << "\n";}
-    else { std::cout << "Line tracking mode active\n"; }
 
-    //Turn on the lamps
-    rc = pixy.setLamp(1, 1);
-    if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
-    else std::cout << "Lamps on\n";
 
-    // Set LED to green
-    rc = pixy.setLED(0, 0, 0); // green
-    if (rc < 0) std::cerr << "setLED failed: " << rc << "\n";
-    else std::cout << "LED green\n";
-
+    std::string rxbuf;
+    rxbuf.reserve(512);
 
 
     while (run_flag) {
-        int16_t h_error = get_heading_error(pixy);  
+        std::string chunk = uart::recv(256, 200); // returns on timeout
+        if (!chunk.empty()) {
+            rxbuf.append(chunk);
+            if (rxbuf.size() > 4096) rxbuf.erase(0, rxbuf.size() - 1024);
 
-        // send 2 bytes (LE)
-        uint8_t tx[2];
-        pack_le16(h_error, tx);
-        uart::send(std::string_view(reinterpret_cast<const char*>(tx), 2));
+            for (;;) {
+                if (!run_flag) break;
 
+                size_t eol = rxbuf.find_first_of("\r\n");
+                if (eol == std::string::npos) break;
 
-        std::string dir = uart::recv(2, 100);
-        if (dir.size() == 2) {
-            std::cout << "Sent h_error: " << h_error
-                      << "  Left Motor: " << static_cast<unsigned>(static_cast<uint8_t>(dir[0]))
-                      << "  Right Motor: " << static_cast<unsigned>(static_cast<uint8_t>(dir[1]))
-                      << "\n";
-        } else {
-            std::cout << "Nothing Received (timeout)\n";
+                std::string raw = rxbuf.substr(0, eol);
+                size_t next = rxbuf.find_first_not_of("\r\n", eol);
+                rxbuf.erase(0, next == std::string::npos ? rxbuf.size() : next);
+
+                std::string line = trim(raw);
+                if (line.empty()) continue;
+
+                // BIG IF CHAIN 
+                if (line == "G kp") {
+                    std::cout << "[CMD] get kp\n";
+                    float val = kp;
+                    uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
+                } else if(line == "S kp"){
+                    std::cout << "[RESP] SET KP\n";
+                } else if(line == "G ki"){
+                    std::cout << "[CMD] get ki\n";
+                    float val = ki;
+                    uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
+                } else if(line == "S ki"){
+                    std::cout << "[RESP] SET KI\n";
+                } else if(line == "G kd"){
+                    std::cout << "[CMD] get kd\n";
+                    float val = kd;
+                    uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
+                } else if(line == "S kd"){
+                    std::cout << "[RESP] SET KD\n";
+                } 
+                else if(line == "G H"){
+                    std::cout << "[RESP] Get heading error\n";
+                    int val = get_heading_error(pixy);
+                    std::cout << "Heading error: " << val << "\n";
+                    uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
+                } else if(line[0] == 'R'){
+                    std::cout << line << "\n";
+                } 
+                
+                else {
+                    uart::send("ERR unknown\n");
+                }
+            }
         }
-
     }
+
 
 
 
@@ -121,7 +135,7 @@ int main() {
     }
 
     // Turn off the lamps
-    rc = pixy.setLamp(0, 0);
+    int rc = pixy.setLamp(0, 0);
     if (rc < 0) std::cerr << "setLamp failed: " << rc << "\n";
     else std::cout << "Lamps off\n";
 
@@ -130,76 +144,8 @@ int main() {
 }
 
 
-int get_heading_error(Pixy2 &pixy){
-    int32_t error;
- // center of the Pixy2 camera's view (316 pixels wide)    
 
-    pixy.line.getMainFeatures();
-    
-    if(pixy.line.numVectors){
-        //printf("%u\n", pixy.line.numVectors);
-        //pixy.line.vectors[0].print();
-        int32_t opp = (int32_t)pixy.line.vectors->m_x1 - (int32_t)X_CENTER;   // Horizontal offset
-        int32_t adj = (int32_t)pixy.line.vectors->m_y1;     // Uppermost y component
-        float theta = atan((float)opp / (float)adj) * (180 / M_PI); // Offset angle
-        error = (int32_t)theta;
-        std::cout << "Heading error: " << error << " degrees\n";
-        return error;
-    } else {
-        std::cout << "No vectors detected\n";
-        return -999; 
-    }
-}
 
-void  get_line_features(Pixy2 &pixy)
-{
-  int  Element_Index;
-
-  // Query Pixy for line features //
-  pixy.line.getAllFeatures();
-
-  // Were vectors detected? //
-  if (pixy.line.numVectors)
-  {
-    // Blocks detected - print them! //
-
-    printf ("Detected %d vectors(s)\n", pixy.line.numVectors);
-
-    for (Element_Index = 0; Element_Index < pixy.line.numVectors; ++Element_Index)
-    {
-      printf ("  Vector %d: ", Element_Index + 1);
-      pixy.line.vectors[Element_Index].print();
-    }
-  }
-
-  // Were intersections detected? //
-  if (pixy.line.numIntersections)
-  {
-    // Intersections detected - print them! //
-
-    printf ("Detected %d intersections(s)\n", pixy.line.numIntersections);
-
-    for (Element_Index = 0; Element_Index < pixy.line.numIntersections; ++Element_Index)
-    {
-      printf ("  ");
-      pixy.line.intersections[Element_Index].print();
-    }
-  }
-
-  // Were barcodes detected? //
-  if (pixy.line.numBarcodes)
-  {
-    // Barcodes detected - print them! //
-
-    printf ("Detected %d barcodes(s)\n", pixy.line.numBarcodes);
-
-    for (Element_Index = 0; Element_Index < pixy.line.numBarcodes; ++Element_Index)
-    {
-      printf ("  Barcode %d: ", Element_Index + 1);
-      pixy.line.barcodes[Element_Index].print();
-    }
-  }
-}
 
 void handle_SIGINT(int unused) {
     run_flag = false;

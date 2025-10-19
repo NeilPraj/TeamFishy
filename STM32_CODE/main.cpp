@@ -1,25 +1,26 @@
 /* USER CODE BEGIN Header */
 /**
- ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2025 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "Motors.h"
+#include "Motors.hpp"
 #include <cstring>
+#include <cstdio>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -33,7 +34,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define RXBUF_SIZE 16
-#define STOP_DA_FISHY -999
+#define STOP -999
+#define rxD 25
+#define txD 25
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -42,55 +45,60 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim1;
 
-UART_HandleTypeDef huart1;
-DMA_HandleTypeDef hdma_usart1_rx;
-
-float ki = 0.0f;
-float kd = 0.0f;
-float kp = 0.0f;
-
-
+UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 static uint8_t rxbuf[RXBUF_SIZE];
 volatile int16_t latest_heading;
 volatile uint8_t heading_ready = 0;
 
-volatile uint32_t counter = 0;
+int32_t heading = 0;
+
+const char* req;
+
+float ki = 0.0f;
+float kd = 0.0f;
+float kp = 0.0f;
+
+
+bool kp_set = 0, ki_set = 0, kd_set = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_TIM2_Init(void);
-static void MX_USART1_UART_Init(void);
-
-
+static void MX_TIM1_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void uart_rx_start(void);
-void HAL_UARTex_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size);
-uint32_t millis();
+void HAL_UARTex_RxEventCallback(UART_HandleTypeDef *huart3, uint16_t Size);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static inline void uart_drain_rx(UART_HandleTypeDef *huart) {
 
-static inline int16_t le16_to_i16(const uint8_t b[2])
-{
-  return (int16_t)((uint16_t)b[0] | ((uint16_t)b[1] << 8));
+    // Clear error flags defensively (order doesn’t matter here)
+    __HAL_UART_CLEAR_PEFLAG(huart);
+    __HAL_UART_CLEAR_FEFLAG(huart);
+    __HAL_UART_CLEAR_NEFLAG(huart);
+    __HAL_UART_CLEAR_OREFLAG(huart);
+
 }
+
 
 static inline void motors_stop(void)
 {
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
 }
-
 /* USER CODE END 0 */
 
 /**
@@ -123,95 +131,120 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_TIM2_Init();
-  MX_USART1_UART_Init();
+  MX_TIM1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_3, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
-
-  SysTick_Config(SystemCoreClock / 1000); // 1ms tick
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
 
   Motors::Channels motor_ch = {
       .left_in1 = TIM_CHANNEL_1,
       .left_in2 = TIM_CHANNEL_2,
       .right_in1 = TIM_CHANNEL_3,
-      .right_in2 = TIM_CHANNEL_4
-  };
+      .right_in2 = TIM_CHANNEL_4};
 
+  Motors motors(&htim1, motor_ch);
 
-  Motors motors(&htim2, motor_ch);
-  /* USER CODE END 2 */
+  uint8_t res_float[4];
+
+  while (!kp_set)
+  {
+    req = "G kp\n";
+    uart_drain_rx(&huart3);
+    HAL_UART_Transmit(&huart3, (uint8_t *)req, strlen(req), txD);
+    if (HAL_UART_Receive(&huart3, res_float, sizeof(res_float), rxD) == HAL_OK)
+    {
+      memcpy(&kp, res_float, sizeof(float));
+      char msg[48];
+      int32_t milli = (int32_t)(kp * 1000.0f);
+      int n = snprintf(msg, sizeof(msg), "R kp=%ld.%03ld\r\n",
+                       (long)(milli / 1000),
+                       (long)labs(milli % 1000));
+      HAL_UART_Transmit(&huart3, (uint8_t *)msg, n, txD);
+      kp_set = 1;
+    }
+  }
+
+  while (!ki_set)
+  {
+    req = "G ki\n";
+    uart_drain_rx(&huart3);
+    HAL_UART_Transmit(&huart3, (uint8_t *)req, strlen(req), txD);
+    if (HAL_UART_Receive(&huart3, res_float, sizeof(res_float), rxD) == HAL_OK)
+    {
+      memcpy(&ki, res_float, sizeof(float));
+      char msg[48];
+      int32_t milli = (int32_t)(ki * 1000.0f);
+      int n = snprintf(msg, sizeof(msg), "R ki=%ld.%03ld\r\n",
+                       (long)(milli / 1000),
+                       (long)labs(milli % 1000));
+      HAL_UART_Transmit(&huart3, (uint8_t *)msg, n, txD);
+      ki_set = 1;
+    }
+  }
+
+  while (!kd_set)
+  {
+    req = "G kd\n";
+    uart_drain_rx(&huart3);
+    HAL_UART_Transmit(&huart3, (uint8_t *)req, strlen(req), txD);
+    if (HAL_UART_Receive(&huart3, res_float, sizeof(res_float), rxD) == HAL_OK)
+    {
+      memcpy(&kd, res_float, sizeof(float));
+      char msg[48];
+      int32_t milli = (int32_t)(kd * 1000.0f);
+      int n = snprintf(msg, sizeof(msg), "R kd=%ld.%03ld\r\n",
+                       (long)(milli / 1000),
+                       (long)labs(milli % 1000));
+      HAL_UART_Transmit(&huart3, (uint8_t *)msg, n, txD);
+      kd_set = 1;
+    }
+  }
+
+  HAL_Delay(5000);
+
 
   /* Infinite loop */
-  uint8_t resp;
-  uint8_t res_float[4];
-  uint8_t err_msg[4] = {'N','N','N','N'};
+  while (1)
+  {
+      req = "G H\n";
+      uart_drain_rx(&huart3);
+      HAL_UART_Transmit(&huart3, (uint8_t*)req, strlen(req), txD);
 
-  bool kp_set, ki_set, kd_set;
-
-  for(int i = 0; i < 3 ; ++i){
-    if(HAL_UART_Receive(&huart1, res_float, sizeof(res_float), HAL_MAX_DELAY) == HAL_OK){
-      if(i == 0){
-        memcpy(&kp, res_float, sizeof(float));
-        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&kp), sizeof(kp), HAL_MAX_DELAY);
-        kp_set =true;
-      } else if (i == 1){
-        memcpy(&ki, res_float, sizeof(float));
-        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&ki), sizeof(ki), HAL_MAX_DELAY);
-        ki_set =true;
-      } else if (i == 2){
-        memcpy(&kd, res_float, sizeof(float));
-        HAL_UART_Transmit(&huart1,reinterpret_cast<uint8_t*>(&kd), sizeof(kd), HAL_MAX_DELAY);
-        kd_set =true;
-      }
-    }
-
-  }
+      uint8_t h_rec[2];  // signed 16-bit coming back
+      if (HAL_UART_Receive(&huart3, h_rec, sizeof h_rec, rxD) == HAL_OK)
+      {
+          // Little-endian: low byte first (matches AB FF -> 0xFFAB -> -85)
+          heading = (int16_t)((uint16_t)h_rec[0] | ((uint16_t)h_rec[1] << 8));
   
+          char msg[32];
+          snprintf(msg, sizeof msg, "R: %d\r\n", (int)heading);
+          HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD);
+      }
+      else
+      {
+          const char err[] = "UART receive failed\r\n";
+          HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD); // use txD here, not rxD
+      }
 
-  /*
-  uint8_t buf[4];
-  while(!constants_set)
-  if (HAL_UART_Receive(&huart1, buf, sizeof(buf), HAL_MAX_DELAY) == HAL_OK) {
-      HAL_UART_Transmit(&huart1, buf, sizeof(buf), HAL_MAX_DELAY);
-      constants_set = true;
-  }
-  */
-
-
-
-  uart_rx_start();
-  int16_t previous_error = 0;
-  uint8_t max_speed = 175;
-  /* USER CODE BEGIN WHILE */
-while (1)
-{
-    if (heading_ready) {
-        __disable_irq();
-        int16_t h = latest_heading;
-        heading_ready = 0;
-        __enable_irq();
-
-        // --- STOP condition ---
-        if (h == STOP_DA_FISHY) {
-            resp = 'S';
-            motors.resetIntegral();
-            motors_stop();
-            HAL_UART_Transmit(&huart1, &resp, 1, HAL_MAX_DELAY);
-            continue;
-        }
-
-        //TODO implement PID control here
-        // --- PID control ---
-        int16_t correction = motors.pidController(8.0f, 1.0f, 0.2f, h, previous_error, 0.1f);
-        previous_error = h;
-        uint8_t base_speed = 125;
+      if(heading == -999){
+        const char err[] = "R NO VECTOR/STOP REQUESTED";
+        motors.resetIntegral();
+        motors_stop();
+        HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD); 
+      } else{
+        
+        int max_speed = 200;
+        int32_t previous_error;
+        int16_t correction = motors.pidController(kp, ki, kd, heading, previous_error, 0.1f);
+        previous_error = heading;
+        uint8_t base_speed = 167;
 
         uint8_t left_speed = base_speed + correction;
         uint8_t right_speed = base_speed - correction;
@@ -223,16 +256,28 @@ while (1)
 
         motors.setLeft(left_speed);
         motors.setRight(right_speed);
-
-        uint8_t resp_buf[2];
-        resp_buf[0] = left_speed;
-        resp_buf[1] = right_speed;
         
-        HAL_UART_Transmit(&huart1, resp_buf, 2, HAL_MAX_DELAY);
 
-    }
-}
-  /* USER CODE END 3 */
+        /*
+          for(int i = 0; i < 255; ++i){
+          motors.setLeft(i);
+          motors.setRight(i);
+          char msg[32];
+          snprintf(msg, sizeof msg, "R: %d\r\n", i);
+          HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD);
+          HAL_Delay(100);
+        }
+        
+        */
+
+
+
+      }
+
+      // optional small delay to avoid hammering the link
+      // HAL_Delay(5);
+  }
+
 }
 
 /**
@@ -275,106 +320,112 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief TIM2 Initialization Function
+  * @brief TIM1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_TIM2_Init(void)
+static void MX_TIM1_Init(void)
 {
 
-  /* USER CODE BEGIN TIM2_Init 0 */
+  /* USER CODE BEGIN TIM1_Init 0 */
 
-  /* USER CODE END TIM2_Init 0 */
+  /* USER CODE END TIM1_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
-  /* USER CODE BEGIN TIM2_Init 1 */
+  /* USER CODE BEGIN TIM1_Init 1 */
 
-  /* USER CODE END TIM2_Init 1 */
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 255;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 14;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 255;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
   }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN TIM2_Init 2 */
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
 
-  /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
+  /* USER CODE END TIM1_Init 2 */
+  HAL_TIM_MspPostInit(&htim1);
 
 }
 
 /**
-  * @brief USART1 Initialization Function
+  * @brief USART3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_USART1_UART_Init(void)
+static void MX_USART3_UART_Init(void)
 {
 
-  /* USER CODE BEGIN USART1_Init 0 */
+  /* USER CODE BEGIN USART3_Init 0 */
 
-  /* USER CODE END USART1_Init 0 */
+  /* USER CODE END USART3_Init 0 */
 
-  /* USER CODE BEGIN USART1_Init 1 */
+  /* USER CODE BEGIN USART3_Init 1 */
 
-  /* USER CODE END USART1_Init 1 */
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USART1_Init 2 */
+  /* USER CODE BEGIN USART3_Init 2 */
 
-  /* USER CODE END USART1_Init 2 */
+  /* USER CODE END USART3_Init 2 */
 
 }
 
@@ -388,9 +439,9 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Channel5_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
 
@@ -407,34 +458,32 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pins : PA0 PA1 PA2 PA3
+                           PA4 PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
+                          |GPIO_PIN_4|GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
-
+  
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
 void uart_rx_start(void)
 {
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart1, rxbuf, RXBUF_SIZE);
-  __HAL_DMA_DISABLE_IT(&hdma_usart1_rx, DMA_IT_HT);
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart3, rxbuf, RXBUF_SIZE);
+  __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);
 }
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size){
-  if(huart->Instance != USART1) return;
+  if(huart->Instance != USART3) return;
 
 
   if (size == 2) {
@@ -452,15 +501,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size){
 }
 
 
-void SysTick_Handler(void)
-{
-  //HAL_IncTick();
-  counter++;
-}
 
-uint32_t millis() {
-    return counter;
-}
 /* USER CODE END 4 */
 
 /**
