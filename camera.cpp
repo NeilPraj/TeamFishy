@@ -1,13 +1,61 @@
 #include "camera.hpp"
-#include <cmath>
-#include <iostream>
+
+
 
 #ifndef X_CENTER
-#define X_CENTER 158
+#define X_CENTER 39
 #endif
 
 
 
+int get_heading_error(Pixy2 &pixy)
+{
+    pixy.line.getMainFeatures();
+    if (pixy.line.numVectors == 0) {
+        std::cout << "No vectors detected\n";
+        return -999;  // or -999 sentinel
+    }
+
+    const auto& v = pixy.line.vectors[0];
+    int x_shift = v.m_x1 - X_CENTER;  // horizontal offset in pixels
+    //std::cout << "x_shift: " << x_shift << "\n";
+    return x_shift;
+}
+
+
+
+
+
+int get_theta_deg(Pixy2& pixy)
+{
+    // Always refresh line features first
+    int rc = pixy.line.getMainFeatures();
+    if (rc < 0) {
+        std::cerr << "getMainFeatures() failed: " << rc << "\n";
+        return -999;
+    }
+    if (pixy.line.numVectors <= 0) {
+        return -999; // no line this frame
+    }
+
+    const auto& v = pixy.line.vectors[0];
+
+    // Pixy coordinate system: x→ right, y→ down
+    const float dx = float(v.m_x1 - v.m_x0);
+    const float dy = float(v.m_y1 - v.m_y0);
+
+    // Angle relative to "forward" (downwards): 0° when vertical/straight ahead
+    const float theta_rad = std::atan2(dx, dy);
+
+    // C++14-safe PI and conversion
+    constexpr float PI = 3.14159265358979323846f;
+    const float theta_deg_f = theta_rad * 180.0f / PI;
+
+    if (!std::isfinite(theta_deg_f)) return -999;
+    return int(std::lrint(theta_deg_f));
+}
+
+/*
 int get_heading_error(Pixy2 &pixy){
     int32_t error;
  // center of the Pixy2 camera's view (316 pixels wide)    
@@ -28,6 +76,8 @@ int get_heading_error(Pixy2 &pixy){
         return -999; 
     }
 }
+*/
+
 
 void  get_line_features(Pixy2 &pixy){
   int  Element_Index;

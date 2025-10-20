@@ -9,6 +9,7 @@
 #include <csignal>
 
 
+
 #define X_CENTER (pixy.frameWidth/2) // center of the Pixy2 camera's view (316 pixels wide)
 
 
@@ -18,9 +19,9 @@ static bool run_flag = true;
 void handle_SIGINT(int unused);
 void recv_float_with_timeout(uint8_t rxsize, uint32_t timeout_ms, float sent_val);
 
-float kp = 2.0f;
-float ki = 0.3f;
-float kd = 0.2f;
+float kp = 100.0f;
+float ki = 10.0f;
+float kd = 35.0f;
 
 // removes leading/trailing spaces, tabs, and newlines
 static std::string trim(const std::string& s) {
@@ -97,7 +98,7 @@ int main() {
                     uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
                 }  else if(line == "G H"){
                     std::cout << "[RESP] Get heading error\n";
-                    int val = get_heading_error(pixy);
+                    int val = get_theta_deg(pixy);
                     std::cout << "Heading error: " << val << "\n";
                     uart::send(std::string_view(reinterpret_cast<const char*>(&val), sizeof(val)));
                 } else if(line[0] == 'R'){
