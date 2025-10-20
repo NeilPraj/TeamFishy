@@ -18,9 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "pid.hpp"
 #include "Motors.hpp"
+#include "sensors.h"
 #include <cstring>
 #include <cstdio>
+#include <bitset>
+#include <cmath>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -59,12 +63,20 @@ int32_t heading = 0;
 
 const char* req;
 
-float ki = 0.0f;
-float kd = 0.0f;
-float kp = 0.0f;
+static float ki = 0.0f;
+static float kd = 0.0f;
+static float kp = 0.0f;
 
+constexpr int16_t MIN_PWM = 150;      // motor stiction floor (30–60 typical)
+constexpr int16_t PWM_MAX = 255;
+
+// One-time (outside loop)
+int16_t xErrPrev = 0;
+int16_t thErrPrev = 0;
 
 bool kp_set = 0, ki_set = 0, kd_set = 0;
+
+static uint8_t sensor_states; 
 
 /* USER CODE END PV */
 
@@ -98,6 +110,24 @@ static inline void motors_stop(void)
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0);
+}
+
+static inline float wrap180(float a) {
+    while (a > 180.f) a -= 360.f;
+    while (a < -180.f) a += 360.f;
+    return a;
+}
+
+static inline int16_t theta_from_wrong_axis(float theta_wrong_deg)
+{
+    float a   = wrap180(theta_wrong_deg);                 // [-180,180]
+    float mag = 90.0f - std::min(90.0f, std::fabs(a));    // deviation from vertical [0..90]
+    float th  = (a >= 0.0f ? +1.0f : -1.0f) * mag;        // signed small angle
+    return static_cast<int16_t>(std::lround(th));
+}
+
+static inline int clampi(int v, int lo, int hi) {
+    if (v < lo) return lo; if (v > hi) return hi; return v;
 }
 /* USER CODE END 0 */
 
@@ -149,7 +179,19 @@ int main(void)
       .right_in1 = TIM_CHANNEL_3,
       .right_in2 = TIM_CHANNEL_4};
 
+  sensors::Inputs sensor_inputs = {
+      .s0 = GPIO_PIN_0,
+      .s1 = GPIO_PIN_1,
+      .s2 = GPIO_PIN_2,
+      .s3 = GPIO_PIN_3,
+      .s4 = GPIO_PIN_4,
+      .s5 = GPIO_PIN_5
+  };
+
   Motors motors(&htim1, motor_ch);
+
+  sensors sensors(sensor_inputs);
+
 
   uint8_t res_float[4];
 
@@ -210,6 +252,9 @@ int main(void)
   HAL_Delay(5000);
 
 
+
+  control::PID tpid(kp, ki, kd, -50.0f, 50.0f);
+  control::PID spid(1.0f, 0.0f, 0.0f, -30.0f, 30.0f);
   /* Infinite loop */
   while (1)
   {
@@ -237,9 +282,92 @@ int main(void)
         const char err[] = "R NO VECTOR/STOP REQUESTED";
         motors.resetIntegral();
         motors_stop();
-        HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD); 
+        //HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD);
       } else{
+
+        static uint32_t last_ms = HAL_GetTick();
+        uint32_t now_ms = HAL_GetTick();
+        float dt = (now_ms - last_ms) * 1e-3f;
+        if (dt <= 0.0f) dt = 1e-3f;
+        last_ms = now_ms;
+
+
+        /*
+        std::bitset<8> sensorBits = sensors.getValues();
+        int16_t x_error = sensors.getShiftErr(sensorBits);
+
+        float u_x = spid.update(x_error, dt, 1);
+        int throttle = int(u_x);
+
+
         
+        
+        */
+ 
+
+        
+
+
+        if(heading > 90){
+          heading = heading - 180;
+        } else if(heading < -90){
+          heading = 180 - heading;
+        }
+        bool valid = (heading != -999);
+        //float e_norm = (float)heading / float(90.0f);
+        
+        float u = tpid.update(heading, dt, valid);
+        int turn = int(u);
+
+        int base_speed = 200;
+
+        int left_speed = base_speed  + turn;
+        int right_speed = base_speed -turn; 
+        
+        left_speed = clampi(left_speed, 150, 250);
+        right_speed = clampi(right_speed, 150, 250);
+
+        motors.setLeft(left_speed);
+        motors.setRight(right_speed);
+
+        char msg[64];
+        snprintf(msg, sizeof msg, "R L %d | R %d | h %d \r\n", (int)left_speed, (int)right_speed, int(heading));
+        HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD);
+
+
+
+
+
+
+        /*
+        int16_t pixy_error = motors.pidController(kp, ki, kd, heading, thErrPrev, 0.1f);
+        thErrPrev = heading;
+
+        char msg[32];
+        snprintf(msg, sizeof msg, "R Error from PID: %d\r\n", (int)pixy_error);
+        HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD);
+
+        int max_speed = 230;
+        int min_speed = 155;
+        int base_speed = 175;
+
+        uint8_t left_speed = base_speed + pixy_error;
+        uint8_t right_speed = base_speed - pixy_error;
+
+        if(left_speed > max_speed) left_speed = max_speed;
+        if(left_speed < min_speed) left_speed = min_speed;
+        if(right_speed > max_speed) right_speed = max_speed;
+        if(right_speed < min_speed) right_speed = min_speed;
+
+        motors.setLeft(left_speed);
+        motors.setRight(right_speed);
+
+        */
+
+
+        
+
+        /*
         int max_speed = 200;
         int32_t previous_error;
         int16_t correction = motors.pidController(kp, ki, kd, heading, previous_error, 0.1f);
@@ -256,6 +384,8 @@ int main(void)
 
         motors.setLeft(left_speed);
         motors.setRight(right_speed);
+        */
+
         
 
         /*

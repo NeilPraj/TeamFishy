@@ -5,7 +5,7 @@
  *      Author: neilp
  */
 
-#include "Motors.h"
+#include "Motors.hpp"
 
 
 Motors::Motors(TIM_HandleTypeDef* tim, Channels ch)
@@ -36,7 +36,7 @@ void Motors::stop(){
 
 int16_t Motors::pidController(float kp, float ki, float kd, int16_t error, int16_t previous_error, float dt) {
     float P_out = kp * error;
-    integral += error * dt;   
+    integral += error * dt;
     float I_out = ki * integral;
     float D_out = kd * (error - previous_error) / dt;
 
