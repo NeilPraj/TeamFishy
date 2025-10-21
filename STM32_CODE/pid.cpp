@@ -33,7 +33,7 @@ void PID::reset(float i0) {
     _last = {0.0f, _I, 0.0f, 0.0f};
 }
 
-void PID::setDFilterAlpha(float alpha) {
+void PID::setDFilterAlpha(float alpha) { //Just set to 0.0f to disable 
     if (alpha < 0.0f) alpha = 0.0f;
     if (alpha > 1.0f) alpha = 1.0f;
     _d_alpha = alpha;
@@ -43,7 +43,7 @@ void PID::setConditionalIntegration(bool enable) {
     _cond_int = enable;
 }
 
-float PID::update(float e, float dt, bool valid) {
+float PID::update(float e, float dt, bool valid) { //Float e is error, float dt is difference in time and bool valid enables integration
     // Defensive dt
     if (dt <= 0.0f) dt = 1e-3f;
 

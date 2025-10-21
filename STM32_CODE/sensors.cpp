@@ -23,11 +23,11 @@ uint8_t sensors::getValues()
 	return mask;
 }
 
-int16_t sensors::pidController(float kp, float ki, float kd, int16_t error, int16_t previous_error, float dt) {
-    float P_out = kp * error;
-    integral += error * dt;
-    float I_out = ki * integral;
-    float D_out = kd * (error - previous_error) / dt;
+int16_t sensors::pidController(float kp, float ki, float kd, int16_t error, int16_t previous_error, float dt) { //BAD PID CONTROLLER BAD BOU DONT USE
+    float P_out = kp * error; //kp is PID proportional constant
+    integral += error * dt; // dt is the change in time
+    float I_out = ki * integral; //ki is integral constant
+    float D_out = kd * (error - previous_error) / dt; //kd is derivative constant
 
     float output = P_out + I_out + D_out;
     return static_cast<int16_t>(output);

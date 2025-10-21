@@ -78,6 +78,9 @@ bool kp_set = 0, ki_set = 0, kd_set = 0;
 
 static uint8_t sensor_states; 
 
+const static int base_speed = 200; //Set the base speed
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -195,6 +198,7 @@ int main(void)
 
   uint8_t res_float[4];
 
+  //
   while (!kp_set)
   {
     req = "G kp\n";
@@ -258,19 +262,19 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-      req = "G H\n";
-      uart_drain_rx(&huart3);
-      HAL_UART_Transmit(&huart3, (uint8_t*)req, strlen(req), txD);
+      req = "G H\n"; //Get theta from PI camera
+      uart_drain_rx(&huart3); //Drain UART buffer
+      HAL_UART_Transmit(&huart3, (uint8_t*)req, strlen(req), txD); //Transmit the request over UART
 
       uint8_t h_rec[2];  // signed 16-bit coming back
-      if (HAL_UART_Receive(&huart3, h_rec, sizeof h_rec, rxD) == HAL_OK)
+      if (HAL_UART_Receive(&huart3, h_rec, sizeof h_rec, rxD) == HAL_OK) 
       {
           // Little-endian: low byte first (matches AB FF -> 0xFFAB -> -85)
           heading = (int16_t)((uint16_t)h_rec[0] | ((uint16_t)h_rec[1] << 8));
   
-          char msg[32];
-          snprintf(msg, sizeof msg, "R: %d\r\n", (int)heading);
-          HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD);
+          char msg[32]; //Prepare response message
+          snprintf(msg, sizeof msg, "R: %d\r\n", (int)heading); //Pack the message into a format that can be sent 
+          HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), txD); //Transmit uart over uart
       }
       else
       {
@@ -278,14 +282,15 @@ int main(void)
           HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD); // use txD here, not rxD
       }
 
-      if(heading == -999){
+      if(heading == -999){ //PI sents -999 when camera detects no vectors
         const char err[] = "R NO VECTOR/STOP REQUESTED";
-        motors.resetIntegral();
-        motors_stop();
+        motors.resetIntegral(); //Stop integrating (Depricated)
+        motors_stop(); //Stop the motors (this dosnt work for some reason)
         //HAL_UART_Transmit(&huart3, (uint8_t*)err, strlen(err), txD);
       } else{
 
-        static uint32_t last_ms = HAL_GetTick();
+        // This gets DT for our PID controllers
+        static uint32_t last_ms = HAL_GetTick(); 
         uint32_t now_ms = HAL_GetTick();
         float dt = (now_ms - last_ms) * 1e-3f;
         if (dt <= 0.0f) dt = 1e-3f;
@@ -298,16 +303,12 @@ int main(void)
 
         float u_x = spid.update(x_error, dt, 1);
         int throttle = int(u_x);
-
-
-        
-        
         */
  
 
         
 
-
+        //For some reason, the heading likes to reference from 180/-1
         if(heading > 90){
           heading = heading - 180;
         } else if(heading < -90){
@@ -316,18 +317,21 @@ int main(void)
         bool valid = (heading != -999);
         //float e_norm = (float)heading / float(90.0f);
         
-        float u = tpid.update(heading, dt, valid);
-        int turn = int(u);
+        float u = tpid.update(heading, dt, valid); //Feed the heading (theta ) into the theta PID controller and get U (error)
+        int turn = int(u); //Convert u into something usefukl (an int)
 
-        int base_speed = 200;
 
-        int left_speed = base_speed  + turn;
-        int right_speed = base_speed -turn; 
+        int left_speed = base_speed  + turn; //Add the PID error to the left speed
+        int right_speed = base_speed -turn;  //Subtract the PID Turn error from the right speed
+
+        //In theory, the expression for the proper PID is (left speed = base_speed + turn_PID + speed_pid)
+        //In theory, the expression for the proper PID is (rsightspeedpeed = base_speed - turn_PID + speed_pid)
+
         
-        left_speed = clampi(left_speed, 150, 250);
+        left_speed = clampi(left_speed, 150, 250); //Clamp left speed to ranges (MIN PWM is 150 to make wheels spin)
         right_speed = clampi(right_speed, 150, 250);
 
-        motors.setLeft(left_speed);
+        motors.setLeft(left_speed); //SET 
         motors.setRight(right_speed);
 
         char msg[64];
