@@ -1,0 +1,7 @@
+{
+    "mplab.clangd.arguments": [
+        "--header-insertion=never"
+    ],
+    "mplab.clangd.compileCommandsDir": "${workspaceFolder}/_build/fishies_firmware/default",
+    "mplab.clangd.path": "/opt/microchip/xc8/v4.00/bin/xc8-clangd"
+}

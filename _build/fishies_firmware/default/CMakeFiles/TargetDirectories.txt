@@ -1,0 +1,4 @@
+/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir
+/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_image_dFFRpkY0.dir
+/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/CMakeFiles/edit_cache.dir
+/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/CMakeFiles/rebuild_cache.dir
