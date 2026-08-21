@@ -1,3 +1,5 @@
 # ninja log v7
 1	97	1787272239173389447	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/main.c.p1	d27b0adaf809538b
 97	435	1787272239271050241	/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.elf	7dd6de696f6aa5d4
+0	19	1787278552554985602	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/TeamFishy/main.c.p1	2b3ac53bd516ccc9
+19	345	1787278552574614124	/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.elf	53f2e3f7db58cb16

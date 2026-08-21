@@ -3,11 +3,11 @@ Microchip MPLAB XC8 Compiler V4.00
 Linker command line:
 
 -W-3 --edf=/opt/microchip/xc8/v4.00/pic/dat/20260614213421_en.msgs -cn \
-  -h+/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.sym \
-  --cmf=/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.cmf \
-  -z -Q18F47Q43 -o/tmp/xcXlDpmLG/driver_tmp_3.o --defsym=__MPLAB_BUILD=1 \
+  -h+/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.sym \
+  --cmf=/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.cmf -z \
+  -Q18F47Q43 -o/tmp/xcXnoaPJe/driver_tmp_3.o --defsym=__MPLAB_BUILD=1 \
   --fixupoverflow=error -Mno-const-data-in-config-mapped-progmem \
-  --md=/tmp/xcXlDpmLG/driver_tmp_0.dat -E1 -ver=XC8 Compiler \
+  --md=/tmp/xcXnoaPJe/driver_tmp_0.dat -E1 -ver=XC8 Compiler \
   -ACODE=00h-01FFFFh -ACONST=00h-01FFFFh \
   -ASMALLCONST=02600h-026FFhx218,012600h-0126FFhx218 \
   -AMEDIUMCONST=02600h-0FFFFh,012600h-01FFFFh -ACOMRAM=0501h-055Fh \
@@ -33,8 +33,8 @@ Linker command line:
   -pfarbss=FARRAM,fardata=FARRAM,nvFARRAM=FARRAM \
   -pintsave_regs=BIGRAM,bigbss=BIGRAM,bigdata=BIGRAM -pbss=RAM \
   -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE -prparam=COMRAM \
-  /tmp/xcXlDpmLG/driver_tmp_7.o \
-  /home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.o 
+  /tmp/xcXnoaPJe/driver_tmp_7.o \
+  /home/cappy/Projects/TeamFishy/out/fishies_firmware/default.o 
 
 Object code version is 3.11
 
@@ -43,10 +43,10 @@ Machine type is 18F47Q43
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-/tmp/xcXlDpmLG/driver_tmp_7.o
+/tmp/xcXnoaPJe/driver_tmp_7.o
                 init                              1FFFC    1FFFC        4     FFFE       0
                 reset_vec                             0        0        4        0       0
-/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.o
+/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.o
                 smallconst                         2600     2600        2     1300       0
                 text0                              2602     2602        8     1301       0
                 cinit                              260A     260A        6     1301       0
@@ -434,8 +434,8 @@ shared
 
 shared estimated size: 1
 
-/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/main.c
+/home/cappy/Projects/TeamFishy/main.c
 		_main          		CODE           	2602	0000	8
 
-/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/main.c estimated size: 8
+/home/cappy/Projects/TeamFishy/main.c estimated size: 8
 

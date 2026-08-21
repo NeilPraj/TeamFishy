@@ -29,16 +29,16 @@ endif()
 
 
 # Main target for this project
-add_executable(fishies_firmware_default_image_dFFRpkY0 ${fishies_firmware_default_library_list})
+add_executable(fishies_firmware_default_image_qFvXCUWm ${fishies_firmware_default_library_list})
 
-set_target_properties(fishies_firmware_default_image_dFFRpkY0 PROPERTIES
+set_target_properties(fishies_firmware_default_image_qFvXCUWm PROPERTIES
     OUTPUT_NAME "default"
     SUFFIX ".elf"
     ADDITIONAL_CLEAN_FILES "${output_extensions}"
     RUNTIME_OUTPUT_DIRECTORY "${fishies_firmware_default_output_dir}")
-target_link_libraries(fishies_firmware_default_image_dFFRpkY0 PRIVATE ${fishies_firmware_default_default_XC8_FILE_TYPE_link})
+target_link_libraries(fishies_firmware_default_image_qFvXCUWm PRIVATE ${fishies_firmware_default_default_XC8_FILE_TYPE_link})
 
 # Add the link options from the rule file.
-fishies_firmware_default_link_rule( fishies_firmware_default_image_dFFRpkY0)
+fishies_firmware_default_link_rule( fishies_firmware_default_image_qFvXCUWm)
 
 

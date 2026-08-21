@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/cmake_install.cmake"
+		"/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

@@ -1,4 +1,4 @@
-# Install script for directory: /home/cappy/Projects/2026/BMC/firmware/fishies_firmware/cmake/fishies_firmware/default
+# Install script for directory: /home/cappy/Projects/TeamFishy/cmake/fishies_firmware/default
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,7 +40,7 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/install_local_manifest.txt"
+  file(WRITE "/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -56,6 +56,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/_build/fishies_firmware/default/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

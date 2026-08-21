@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="/home/cappy/Projects/2026/BMC/firmware/fishies_firmware/out/fishies_firmware/default.hex">
+  <executable name="/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.hex">
     <memory name="program">
       <units>bytes</units>
       <length>131072</length>
