@@ -1,0 +1,9 @@
+[
+    {
+        "name": "XC8",
+        "compilers": {
+            "C": "C:/Program Files/Microchip/xc8/v4.00/bin/xc8-cc.exe"
+        },
+        "toolchainFile": "${workspaceFolder}/.generated/toolchain.cmake"
+    }
+]

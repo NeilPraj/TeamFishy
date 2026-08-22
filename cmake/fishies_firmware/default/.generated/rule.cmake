@@ -1,6 +1,6 @@
 # The following functions contains all the flags passed to the different build stages.
 
-set(PACK_REPO_PATH "/home/cappy/.mchp_packs" CACHE PATH "Path to the root of a pack repository.")
+set(PACK_REPO_PATH "C:/Users/Kingsley Dike/.mchp_packs" CACHE PATH "Path to the root of a pack repository.")
 
 function(fishies_firmware_default_default_XC8_assemble_rule target)
     set(options

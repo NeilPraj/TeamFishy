@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default/cmake_install.cmake"
+		"C:/Users/Kingsley Dike/fishies_firmware/TeamFishy/_build/fishies_firmware/default/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

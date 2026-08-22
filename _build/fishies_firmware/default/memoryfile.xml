@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="/home/cappy/Projects/TeamFishy/out/fishies_firmware/default.hex">
+  <executable name="C:\Users\Kingsley Dike\fishies_firmware\TeamFishy\out\fishies_firmware\default.hex">
     <memory name="program">
       <units>bytes</units>
       <length>131072</length>
-      <used>24</used>
-      <free>131048</free>
+      <used>28</used>
+      <free>131044</free>
     </memory>
     <memory name="data">
       <units>bytes</units>

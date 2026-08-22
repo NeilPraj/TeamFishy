@@ -1,9 +1,9 @@
-set(CMAKE_HOST_SYSTEM "Linux-7.1.8-arch1-3")
-set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "7.1.8-arch1-3")
-set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
+set(CMAKE_HOST_SYSTEM "Windows-10.0.26200")
+set(CMAKE_HOST_SYSTEM_NAME "Windows")
+set(CMAKE_HOST_SYSTEM_VERSION "10.0.26200")
+set(CMAKE_HOST_SYSTEM_PROCESSOR "")
 
-include("/home/cappy/Projects/TeamFishy/cmake/fishies_firmware/default/.generated/toolchain.cmake")
+include("C:/Users/Kingsley Dike/fishies_firmware/TeamFishy/cmake/fishies_firmware/default/.generated/toolchain.cmake")
 
 set(CMAKE_SYSTEM "Generic")
 set(CMAKE_SYSTEM_NAME "Generic")
