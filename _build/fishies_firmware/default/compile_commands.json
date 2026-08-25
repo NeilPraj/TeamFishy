@@ -1,8 +1,20 @@
 [
 {
-  "directory": "/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default",
-  "command": "/opt/microchip/xc8/v4.00/bin/xc8-cc -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=/home/cappy/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mno-const-data-in-config-mapped-progmem -mstack=compiled:auto:auto:auto -o CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/TeamFishy/main.c.p1 -c /home/cappy/Projects/TeamFishy/main.c",
-  "file": "/home/cappy/Projects/TeamFishy/main.c",
-  "output": "/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/TeamFishy/main.c.p1"
+  "directory": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default",
+  "command": "/opt/microchip/xc8/v4.00/bin/xc8-cc -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=/home/cappy/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mno-const-data-in-config-mapped-progmem -mstack=compiled:auto:auto:auto -o CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/clock.c.p1 -c /home/cappy/Projects/2026/BMC/TeamFishy/clock.c",
+  "file": "/home/cappy/Projects/2026/BMC/TeamFishy/clock.c",
+  "output": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/clock.c.p1"
+},
+{
+  "directory": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default",
+  "command": "/opt/microchip/xc8/v4.00/bin/xc8-cc -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=/home/cappy/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mno-const-data-in-config-mapped-progmem -mstack=compiled:auto:auto:auto -o CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/led.c.p1 -c /home/cappy/Projects/2026/BMC/TeamFishy/led.c",
+  "file": "/home/cappy/Projects/2026/BMC/TeamFishy/led.c",
+  "output": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/led.c.p1"
+},
+{
+  "directory": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default",
+  "command": "/opt/microchip/xc8/v4.00/bin/xc8-cc -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=/home/cappy/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mno-const-data-in-config-mapped-progmem -mstack=compiled:auto:auto:auto -o CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/main.c.p1 -c /home/cappy/Projects/2026/BMC/TeamFishy/main.c",
+  "file": "/home/cappy/Projects/2026/BMC/TeamFishy/main.c",
+  "output": "/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/home/cappy/Projects/2026/BMC/TeamFishy/main.c.p1"
 }
 ]

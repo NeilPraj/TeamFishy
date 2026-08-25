@@ -3,9 +3,11 @@
     "configurations": [
         {
             "name": "default",
-            "id": "conf1",
+            "id": "",
             "device": "PIC18F47Q43",
             "imagePath": "./out/fishies_firmware/default.elf",
+            "toolProperties": "default-tool-base",
+            "tool": "Curiosity/Starter Kits (PKOB4)",
             "packs": [
                 {
                     "name": "PIC18F-Q_DFP",
@@ -23,6 +25,13 @@
             "type": "toolchain",
             "provider": "microchip.toolchains:xc8@4.00",
             "properties": {}
+        },
+        {
+            "name": "default-tool-base",
+            "type": "tool",
+            "properties": {
+                "programoptions.preserveprogramrange": false
+            }
         }
     ],
     "fileSets": [

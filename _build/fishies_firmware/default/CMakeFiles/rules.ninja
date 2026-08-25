@@ -24,7 +24,7 @@ rule C_COMPILER__fishies_firmware_default_default_XC8_compile_unscanned_
 #############################################
 # Rule for linking C executable.
 
-rule C_EXECUTABLE_LINKER__fishies_firmware_default_image_qFvXCUWm_
+rule C_EXECUTABLE_LINKER__fishies_firmware_default_image_8kJbk6Vp_
   command = $PRE_LINK && /opt/microchip/xc8/v4.00/bin/xc8-cc $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake --regenerate-during-build -S/home/cappy/Projects/TeamFishy/cmake/fishies_firmware/default -B/home/cappy/Projects/TeamFishy/_build/fishies_firmware/default
+  command = /usr/bin/cmake --regenerate-during-build -S/home/cappy/Projects/2026/BMC/TeamFishy/cmake/fishies_firmware/default -B/home/cappy/Projects/2026/BMC/TeamFishy/_build/fishies_firmware/default
   description = Re-running CMake...
   generator = 1
 

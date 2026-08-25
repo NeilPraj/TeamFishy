@@ -1,0 +1,3 @@
+#define LED_TRIS TRISAbits.TRISA5
+#define LED_ANSEL ANSELAbits.ANSELA5
+#define LED_LAT LATAbits.LATA5

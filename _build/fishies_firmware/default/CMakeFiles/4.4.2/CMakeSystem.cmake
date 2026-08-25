@@ -3,7 +3,7 @@ set(CMAKE_HOST_SYSTEM_NAME "Linux")
 set(CMAKE_HOST_SYSTEM_VERSION "7.1.8-arch1-3")
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
-include("/home/cappy/Projects/TeamFishy/cmake/fishies_firmware/default/.generated/toolchain.cmake")
+include("/home/cappy/Projects/2026/BMC/TeamFishy/cmake/fishies_firmware/default/.generated/toolchain.cmake")
 
 set(CMAKE_SYSTEM "Generic")
 set(CMAKE_SYSTEM_NAME "Generic")
