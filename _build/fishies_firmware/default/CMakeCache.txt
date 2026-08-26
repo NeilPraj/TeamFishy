@@ -84,9 +84,6 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Enable/Disable output of build database during the build.
 CMAKE_EXPORT_BUILD_DATABASE:BOOL=
 
-//Enable output of a compile_commands.json file listing the exact
-// compiler invocation for each translation unit. Implemented by
-// the Makefile and Ninja generators; ignored elsewhere.
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
 
 //Value Computed by CMake.

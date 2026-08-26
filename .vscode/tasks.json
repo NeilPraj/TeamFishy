@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "MPLAB-CMake",
+			"label": "fishies_firmware: default - Build",
+			"action": "fullbuild",
+			"buildType": "debug",
+			"configName": "default",
+			"configPath": "${workspaceFolder}/.vscode/fishies_firmware.mplab.json",
+			"problemMatcher": [
+				"$cmakeGenerate",
+				"$cmakeBuildCompiler",
+				"$cmakeBuildLinker",
+				"$xc8Error1",
+				"$xc8Error2",
+				"$nonLineSpecific",
+				"$noSeverity"
+			],
+			"group": "build"
+		}
+	]
+}
