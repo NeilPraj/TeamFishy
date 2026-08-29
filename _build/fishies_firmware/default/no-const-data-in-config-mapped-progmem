@@ -7,10 +7,10 @@ Linker command line:
   -h+C:\Users\Kingsley Dike\fishies_firmware\TeamFishy\out\fishies_firmware\default.sym \
   --cmf=C:\Users\Kingsley Dike\fishies_firmware\TeamFishy\out\fishies_firmware\default.cmf \
   -z -Q18F47Q43 \
-  -oC:\Users\KINGSL~1\AppData\Local\Temp\xcAsllc.0\driver_tmp_3.o \
+  -oC:\Users\KINGSL~1\AppData\Local\Temp\xcAs56k.0\driver_tmp_3.o \
   --defsym=__MPLAB_BUILD=1 --fixupoverflow=error \
   -Mno-const-data-in-config-mapped-progmem \
-  --md=C:\Users\KINGSL~1\AppData\Local\Temp\xcAsllc.0\driver_tmp_0.dat -E1 \
+  --md=C:\Users\KINGSL~1\AppData\Local\Temp\xcAs56k.0\driver_tmp_0.dat -E1 \
   -ver=XC8 Compiler -ACODE=00h-01FFFFh -ACONST=00h-01FFFFh \
   -ASMALLCONST=02600h-026FFhx218,012600h-0126FFhx218 \
   -AMEDIUMCONST=02600h-0FFFFh,012600h-01FFFFh -ACOMRAM=0501h-055Fh \
@@ -36,7 +36,7 @@ Linker command line:
   -pfarbss=FARRAM,fardata=FARRAM,nvFARRAM=FARRAM \
   -pintsave_regs=BIGRAM,bigbss=BIGRAM,bigdata=BIGRAM -pbss=RAM \
   -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE -prparam=COMRAM \
-  C:\Users\KINGSL~1\AppData\Local\Temp\xcAsllc.0\driver_tmp_7.o \
+  C:\Users\KINGSL~1\AppData\Local\Temp\xcAs56k.0\driver_tmp_7.o \
   C:\Users\Kingsley Dike\fishies_firmware\TeamFishy\out\fishies_firmware\default.o 
 
 Object code version is 3.11
@@ -46,7 +46,7 @@ Machine type is 18F47Q43
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-C:\Users\KINGSL~1\AppData\Local\Temp\xcAsllc.0\driver_tmp_7.o
+C:\Users\KINGSL~1\AppData\Local\Temp\xcAs56k.0\driver_tmp_7.o
                 init                              1FFFC    1FFFC        4     FFFE       0
                 reset_vec                             0        0        4        0       0
 C:\Users\Kingsley Dike\fishies_firmware\TeamFishy\out\fishies_firmware\default.o

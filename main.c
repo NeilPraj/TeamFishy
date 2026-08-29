@@ -5,6 +5,8 @@
  * @brief Main function
  */
 #include <xc.h>
+#define _XTAL_FREQ 64000000UL
+
 
 int main(){
 
