@@ -11,3 +11,13 @@
 60	398	8098156023761428	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/30026526654290e0fc4aea3343d58328/TeamFishy/config.mcc/mcc_generated_files/system/src/interrupt.c.p1	747d8f38b417ac2
 423	1513	8098156027395818	C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/out/fishies_firmware/default.elf	1378c075db4e32ff
 88	414	8098156024053265	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/uart/src/uart1.c.p1	3eede1f0341b85e2
+67	226	8098164893431899	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/30026526654290e0fc4aea3343d58328/TeamFishy/config.mcc/mcc_generated_files/system/src/config_bits.c.p1	f5bfcf8d2ae07b41
+44	373	8098164893196197	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/adc/src/adc.c.p1	ae02dc8e1ec945ca
+51	382	8098164893261768	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/spi/src/spi1.c.p1	2e008fb4be5eec79
+37	392	8098164893120160	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/main.c.p1	e87d2940de084f88
+58	394	8098164893341891	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/clock.c.p1	2f36b63e9b33252d
+94	403	8098164893696090	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/system.c.p1	e027f21785285c3e
+75	416	8098164893512014	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/30026526654290e0fc4aea3343d58328/TeamFishy/config.mcc/mcc_generated_files/system/src/interrupt.c.p1	747d8f38b417ac2
+83	418	8098164893581993	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/pins.c.p1	73121961078b0067
+100	436	8098164893766151	CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/uart/src/uart1.c.p1	3eede1f0341b85e2
+437	1871	8098164897129787	C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/out/fishies_firmware/default.elf	88c677a0bb6fc88e
