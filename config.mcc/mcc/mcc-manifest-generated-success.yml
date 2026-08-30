@@ -2,7 +2,7 @@
 
 manifest_file_version: 1.0.0
 project: config
-creation_date: 2026-08-30T13:27:09.280-04:00[America/New_York]
+creation_date: 2026-08-30T14:04:40.468-04:00[America/New_York]
 operating_system: Windows 11
 mcc_mode: VSCodePlugin
 mcc_mode_version: Unknown
@@ -22,5 +22,8 @@ modules:
 - {name: '@mchp-mcc/pic18-configuration-bits-v1', type: MELODY, version: 5.3.5}
 - {name: '@mchp-mcc/pic18-pin-manager', type: MELODY, version: 3.7.2}
 - {name: '@mchp-mcc/pin-content-processor', type: MELODY, version: 3.11.0}
+- {name: '@mchp-mcc/scf-pic8-adcc-v1', type: MELODY, version: 5.0.1}
 - {name: '@mchp-mcc/scf-pic8-interrupt-v1', type: MELODY, version: 5.2.11}
 - {name: '@mchp-mcc/scf-pic8-osc-v1', type: MELODY, version: 4.4.0}
+- {name: '@mchp-mcc/scf-pic8-spi-v1', type: MELODY, version: 5.2.2}
+- {name: '@mchp-mcc/scf-pic8-uart-v1', type: MELODY, version: 7.2.2}
