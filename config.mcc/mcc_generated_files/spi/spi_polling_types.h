@@ -1,19 +1,20 @@
- /*
- * MAIN Generated Driver File
- * 
- * @file main.c
- * 
- * @defgroup main MAIN
- * 
- * @brief This is the generated driver implementation file for the MAIN driver.
+/**
+ * SPI Type Definitions Header File
  *
- * @version MAIN Driver Version 1.0.2
+ * @file spi_polling_types.h
  *
- * @version Package Version: 3.1.2
+ * @defgroup spi SPI
+ *
+ * @version SPI Driver Version v3.2.0.
+ * 
+ * @version SPI Package Version v5.2.0.
+ *
+ * @brief This header file provides type definitions for the SPI module operation in Polling mode.
+ *
 */
 
 /*
-ï¿½ [2026] Microchip Technology Inc. and its subsidiaries.
+© [2026] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -32,28 +33,23 @@
     EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
     THIS SOFTWARE.
 */
-#include "mcc_generated_files/system/system.h"
 
-/*
-    Main application
-*/
-
-int main(void)
-{
-    SYSTEM_Initialize();
-    // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
-    // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global Interrupts 
-    // Use the following macros to: 
-
-    // Enable the Global Interrupts 
-    //INTERRUPT_GlobalInterruptEnable(); 
-
-    // Disable the Global Interrupts 
-    //INTERRUPT_GlobalInterruptDisable(); 
+#ifndef SPI_POLLING_TYPES_H
+#define	SPI_POLLING_TYPES_H
 
 
-    while(1)
-    {
-        
-    }    
-}
+/**
+ * @ingroup spi
+ * @typedef struct spi_configuration_t
+ * @brief Holds register configurations for SPI module.
+ */
+typedef struct
+{ 
+    uint8_t con0; 
+    uint8_t con1; 
+    uint8_t con2; 
+    uint8_t baud; 
+    uint8_t clksel;
+} spi_configuration_t;
+
+#endif // SPI_POLLING_TYPES_H

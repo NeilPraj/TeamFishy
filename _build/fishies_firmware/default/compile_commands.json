@@ -7,6 +7,18 @@
 },
 {
   "directory": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default",
+  "command": "\"c:\\Program Files\\Microchip\\xc8\\v4.00\\bin\\xc8-cc.exe\" -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -o CMakeFiles\\fishies_firmware_default_default_XC8_compile.dir\\C_\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\adc\\src\\adc.c.p1 -c C:\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\adc\\src\\adc.c",
+  "file": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/adc/src/adc.c",
+  "output": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/adc/src/adc.c.p1"
+},
+{
+  "directory": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default",
+  "command": "\"c:\\Program Files\\Microchip\\xc8\\v4.00\\bin\\xc8-cc.exe\" -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -o CMakeFiles\\fishies_firmware_default_default_XC8_compile.dir\\C_\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\spi\\src\\spi1.c.p1 -c C:\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\spi\\src\\spi1.c",
+  "file": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/spi/src/spi1.c",
+  "output": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/spi/src/spi1.c.p1"
+},
+{
+  "directory": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default",
   "command": "\"c:\\Program Files\\Microchip\\xc8\\v4.00\\bin\\xc8-cc.exe\" -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -o CMakeFiles\\fishies_firmware_default_default_XC8_compile.dir\\C_\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\system\\src\\clock.c.p1 -c C:\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\system\\src\\clock.c",
   "file": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/clock.c",
   "output": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/clock.c.p1"
@@ -34,5 +46,11 @@
   "command": "\"c:\\Program Files\\Microchip\\xc8\\v4.00\\bin\\xc8-cc.exe\" -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -o CMakeFiles\\fishies_firmware_default_default_XC8_compile.dir\\C_\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\system\\src\\system.c.p1 -c C:\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\system\\src\\system.c",
   "file": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/system.c",
   "output": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/system/src/system.c.p1"
+},
+{
+  "directory": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default",
+  "command": "\"c:\\Program Files\\Microchip\\xc8\\v4.00\\bin\\xc8-cc.exe\" -DXPRJ_default=default -D__18F47Q43__ -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -o CMakeFiles\\fishies_firmware_default_default_XC8_compile.dir\\C_\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\uart\\src\\uart1.c.p1 -c C:\\Users\\Jesse\\Documents\\TeamFishiesCode\\TeamFishy\\config.mcc\\mcc_generated_files\\uart\\src\\uart1.c",
+  "file": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/uart/src/uart1.c",
+  "output": "C:/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/_build/fishies_firmware/default/CMakeFiles/fishies_firmware_default_default_XC8_compile.dir/C_/Users/Jesse/Documents/TeamFishiesCode/TeamFishy/config.mcc/mcc_generated_files/uart/src/uart1.c.p1"
 }
 ]

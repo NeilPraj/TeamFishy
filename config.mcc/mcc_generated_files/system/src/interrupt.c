@@ -70,6 +70,29 @@ void  INTERRUPT_Initialize (void)
 
 }
 
+/**
+ * @ingroup interrupt
+ * @brief Executes whenever a high-priority interrupt is triggered. This routine checks the source of the interrupt and calls the relevant interrupt function.
+ * @pre INTERRUPT_Initialize() is already called.
+ * @param None.
+ * @return None.
+ */
+void __interrupt() INTERRUPT_InterruptManager (void)
+{
+    // interrupt handler
+    if(PIE1bits.ADIE == 1 && PIR1bits.ADIF == 1)
+    {
+        ADC_ISR();
+    }
+    else if(PIE2bits.ADTIE == 1 && PIR2bits.ADTIF == 1)
+    {
+        ADC_ThresholdISR();
+    }
+    else
+    {
+        //Unhandled Interrupt
+    }
+}
 
 void INT0_ISR(void)
 {

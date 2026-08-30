@@ -54,6 +54,26 @@ build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse
   TARGET_PDB = ""
   TARGET_SUPPORT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
 
+build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src\adc.c.p1: C_COMPILER__fishies_firmware_default_default_XC8_compile_unscanned_ C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src\adc.c || cmake_object_order_depends_target_fishies_firmware_default_default_XC8_compile
+  DEFINES = -DXPRJ_default=default -D__18F47Q43__
+  DEP_FILE = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src\adc.c.p1.d
+  FLAGS = -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto
+  OBJECT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+  OBJECT_FILE_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src
+  TARGET_COMPILE_PDB = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\
+  TARGET_PDB = ""
+  TARGET_SUPPORT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+
+build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src\spi1.c.p1: C_COMPILER__fishies_firmware_default_default_XC8_compile_unscanned_ C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src\spi1.c || cmake_object_order_depends_target_fishies_firmware_default_default_XC8_compile
+  DEFINES = -DXPRJ_default=default -D__18F47Q43__
+  DEP_FILE = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src\spi1.c.p1.d
+  FLAGS = -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto
+  OBJECT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+  OBJECT_FILE_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src
+  TARGET_COMPILE_PDB = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\
+  TARGET_PDB = ""
+  TARGET_SUPPORT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+
 build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1: C_COMPILER__fishies_firmware_default_default_XC8_compile_unscanned_ C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c || cmake_object_order_depends_target_fishies_firmware_default_default_XC8_compile
   DEFINES = -DXPRJ_default=default -D__18F47Q43__
   DEP_FILE = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1.d
@@ -104,12 +124,22 @@ build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse
   TARGET_PDB = ""
   TARGET_SUPPORT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
 
+build CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src\uart1.c.p1: C_COMPILER__fishies_firmware_default_default_XC8_compile_unscanned_ C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src\uart1.c || cmake_object_order_depends_target_fishies_firmware_default_default_XC8_compile
+  DEFINES = -DXPRJ_default=default -D__18F47Q43__
+  DEP_FILE = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src\uart1.c.p1.d
+  FLAGS = -c -mcpu=18F47Q43 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto
+  OBJECT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+  OBJECT_FILE_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src
+  TARGET_COMPILE_PDB = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\
+  TARGET_PDB = ""
+  TARGET_SUPPORT_DIR = CMakeFiles\fishies_firmware_default_default_XC8_compile.dir
+
 
 
 #############################################
 # Object library fishies_firmware_default_default_XC8_compile
 
-build fishies_firmware_default_default_XC8_compile: phony CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\main.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\config_bits.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\interrupt.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\pins.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\system.c.p1
+build fishies_firmware_default_default_XC8_compile: phony CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\main.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src\adc.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src\spi1.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\config_bits.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\interrupt.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\pins.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\system.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src\uart1.c.p1
 
 # =============================================================================
 # Object build statements for EXECUTABLE target fishies_firmware_default_image_qQbP98cg
@@ -128,7 +158,7 @@ build cmake_object_order_depends_target_fishies_firmware_default_image_qQbP98cg:
 #############################################
 # Link the executable C:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\out\fishies_firmware\default.elf
 
-build C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\out\fishies_firmware\default.elf: C_EXECUTABLE_LINKER__fishies_firmware_default_image_qQbP98cg_ CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\main.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\config_bits.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\interrupt.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\pins.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\system.c.p1 || fishies_firmware_default_default_XC8_compile
+build C$:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\out\fishies_firmware\default.elf: C_EXECUTABLE_LINKER__fishies_firmware_default_image_qQbP98cg_ CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\main.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\adc\src\adc.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\spi\src\spi1.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\clock.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\config_bits.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\30026526654290e0fc4aea3343d58328\TeamFishy\config.mcc\mcc_generated_files\system\src\interrupt.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\pins.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\system\src\system.c.p1 CMakeFiles\fishies_firmware_default_default_XC8_compile.dir\C_\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\config.mcc\mcc_generated_files\uart\src\uart1.c.p1 || fishies_firmware_default_default_XC8_compile
   LINK_FLAGS = -Wl,-Map=mem.map -mcpu=18F47Q43 -Wl,--defsym=__MPLAB_BUILD=1 -mdfp=C:/Users/Jesse/.mchp_packs/Microchip/PIC18F-Q_DFP/1.30.487/xc8 -fno-short-double -fno-short-float -memi=wordwrite -O0 -maddrqual=ignore -mwarn=-3 -msummary=-psect,-class,+mem,-hex,-file -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto -Wl,--memorysummary,memoryfile.xml
   OBJECT_DIR = CMakeFiles\fishies_firmware_default_image_qQbP98cg.dir
   POST_BUILD = cmd.exe /C "cd /D C:\Users\Jesse\Documents\TeamFishiesCode\TeamFishy\out\fishies_firmware && "c:\Program Files\Microchip\xc8\v4.00\bin\pic-objdump.exe" --disassemble --wide --demangle --line-numbers --section-headers --source default.elf > default.lss"
