@@ -32,7 +32,13 @@
                 {
                     "include": "**/*",
                     "exclude": "**/@(build|_build|out|cmake|.vscode)/**/*"
-                }
+                },
+                "config.mcc/mcc_generated_files/system/src/clock.c",
+                "config.mcc/mcc_generated_files/system/src/interrupt.c",
+                "config.mcc/mcc_generated_files/system/src/config_bits.c",
+                "config.mcc/mcc_generated_files/system/src/system.c",
+                "config.mcc/main.c",
+                "config.mcc/mcc_generated_files/system/src/pins.c"
             ]
         }
     ]

@@ -1,6 +1,6 @@
 # The following functions contains all the flags passed to the different build stages.
 
-set(PACK_REPO_PATH "/home/cappy/.mchp_packs" CACHE PATH "Path to the root of a pack repository.")
+set(PACK_REPO_PATH "C:/Users/Jesse/.mchp_packs" CACHE PATH "Path to the root of a pack repository.")
 
 function(fishies_firmware_default_default_XC8_assemble_rule target)
     set(options
@@ -22,7 +22,6 @@ function(fishies_firmware_default_default_XC8_assemble_rule target)
         "-mno-default-config-bits"
         "-std=c99"
         "-gdwarf-3"
-        "-mno-const-data-in-config-mapped-progmem"
         "-mstack=compiled:auto:auto:auto")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
@@ -52,7 +51,6 @@ function(fishies_firmware_default_default_XC8_assemblePreprocess_rule target)
         "-mno-default-config-bits"
         "-std=c99"
         "-gdwarf-3"
-        "-mno-const-data-in-config-mapped-progmem"
         "-mstack=compiled:auto:auto:auto")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
@@ -80,7 +78,6 @@ function(fishies_firmware_default_default_XC8_compile_rule target)
         "-mno-default-config-bits"
         "-std=c99"
         "-gdwarf-3"
-        "-mno-const-data-in-config-mapped-progmem"
         "-mstack=compiled:auto:auto:auto")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
@@ -109,10 +106,17 @@ function(fishies_firmware_default_link_rule target)
         "-mno-default-config-bits"
         "-std=c99"
         "-gdwarf-3"
-        "-mno-const-data-in-config-mapped-progmem"
         "-mstack=compiled:auto:auto:auto"
         "-Wl,--memorysummary,memoryfile.xml")
     list(REMOVE_ITEM options "")
     target_link_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target} PRIVATE "XPRJ_default=default")
+endfunction()
+function(fishies_firmware_default_objcopy_lss_rule target)
+    add_custom_command(
+        TARGET ${target}
+        POST_BUILD
+        COMMAND ${OBJDUMP}
+        ARGS --disassemble --wide --demangle --line-numbers --section-headers --source ${fishies_firmware_default_image_name} > ${fishies_firmware_default_image_base_name}.lss
+        WORKING_DIRECTORY ${fishies_firmware_default_output_dir})
 endfunction()
