@@ -1,7 +1,7 @@
 {
     "hashFileVersion": "1.1.0",
     "projectFileHash": "1bdf1b7753565c204585af73a417934cc9956fdc5f63dbc99aa99a8d63a82ce2",
-    "cmakeFilesHash": "741105ad099612768d8e1b962d71221099969164666c8224e7d9ca8bcf1f08e6",
-    "cmakerVersion": "4.3.0",
+    "cmakeFilesHash": "e27cd20aa29e82cf7c5e0a6ed6367701ea7d1ce80535dcb3a2eacee555841135",
+    "cmakerVersion": "5.0.2",
     "workspacePath": "/home/cappy/Projects/2026/BMC/TeamFishy"
 }

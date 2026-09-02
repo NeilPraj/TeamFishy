@@ -14,8 +14,18 @@ void UART_Init(void) {
     UART_TX_ANSEL = 0x0;
     UART_RX_ANSEL = 0x0;
 
-    RA1PPS  = 0x20;   // UART1 TX output onto RA1
-    U1RXPPS = 0x03;   // UART1 RX input from RA3
+    // unlock PPS
+    PPSLOCK = 0x55;
+    PPSLOCK = 0xAA;
+    PPSLOCKbits.PPSLOCKED = 0;
+
+    TX_PPS = TX_PPS_VAL;
+    RX_PPS = RX_PPS_VAL;
+
+    // relock PPS
+    PPSLOCK = 0x55;
+    PPSLOCK = 0xAA;
+    PPSLOCKbits.PPSLOCKED = 1;
 
     // ---- peripheral: baud rate, then enable ----
     UART_BAUD_H = (uint8_t)(UART_BRG_VALUE >> 8);
@@ -23,7 +33,7 @@ void UART_Init(void) {
 
     UART_TX_ENABLE = 1;
     UART_RX_ENABLE = 1;
-    UART_ENABLE    = 1;   // turn the whole module on last
+    UART_ENABLE    = 1;
 }
 
 void uart_send_byte(uint8_t data) {

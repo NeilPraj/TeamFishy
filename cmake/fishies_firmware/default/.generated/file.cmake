@@ -24,6 +24,7 @@ set(fishies_firmware_default_default_XC8_FILE_TYPE_compile
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../uart.c")
 set_source_files_properties(${fishies_firmware_default_default_XC8_FILE_TYPE_compile} PROPERTIES LANGUAGE C)
 set(fishies_firmware_default_default_XC8_FILE_TYPE_link)
+set(fishies_firmware_default_default_XC8_FILE_TYPE_objcopy_lss)
 set(fishies_firmware_default_image_name "default.elf")
 set(fishies_firmware_default_image_base_name "default")
 

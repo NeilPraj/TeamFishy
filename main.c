@@ -5,23 +5,26 @@
  * @brief Main function
  */
 
-#include <xc.h>
+#include "adc.h"
 #include "clock.h"
 #include "led.h"
 #include "uart.h"
+#include <xc.h>
 #define _XTAL_FREQ 64000000UL
 
-int main(){
-    clk_initialize();
-    setup_led();
-    UART_Init();
-    const char *message = "Hello, UART!\n";
-    // Add your code here and press Ctrl + Shift + B to build
-    while(1) {
-        led_toggle();
-        uart_send_string(message);
-        __delay_ms(500);
-    }
+int main() {
+  clk_initialize();
+  setup_led();
+  UART_Init();
+  ADC_init();
+  const char *message = "Hello, UART!\n";
+  uart_send_string(message);
 
-    return 0;
+  while (1) {
+    led_toggle();
+    uint16_t res = ADC_read(ADC_CHANNEL_POT);
+    __delay_ms(500);
+  }
+
+  return 0;
 }
