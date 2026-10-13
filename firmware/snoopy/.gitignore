@@ -1,0 +1,10 @@
+build/
+_build/
+dist/
+out/
+cmake/**/.generated/
+nbproject/private/
+nbproject/Makefile-local-*.mk
+nbproject/Makefile-genesis.properties
+nbproject/Makefile-variables.mk
+*.mc3.bak*
